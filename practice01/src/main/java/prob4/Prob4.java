@@ -9,7 +9,6 @@ public class Prob4 {
 
 		System.out.print("문자열을 입력하세요 : ");
 		String text = scanner.nextLine();
-		String showText = "";
 		
 		for(int i = 1; i<= text.length(); i++)
 		{
