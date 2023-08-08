@@ -4,17 +4,20 @@
   <artifactId>java-study</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
+  
   <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.outputEncoding>UTF-8</project.build.outputEncoding>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
-	</properties>
+  </properties>
 	
 	<dependencies>
 	</dependencies>
   
   <modules>
   	<module>chapter03</module>
+  	<module>practice01</module>
+  	<module>practice02</module>
   </modules>
 </project>
