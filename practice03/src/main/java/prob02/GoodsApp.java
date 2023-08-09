@@ -27,6 +27,12 @@ public class GoodsApp {
 		public void setGoodsInputCount(int goodsInputCount) {
 			this.goodsInputCount = goodsInputCount;
 		}
+		public void printGoodsInfo()
+		{
+			System.out.println(getGoodsName() +"(가격:"
+					+ getGoodsPrice() +"원)이 "
+					+ getGoodsInputCount()+"개 입고 되었습니다.");
+		}
 	}
 	
 	public static void main(String[] args) {
@@ -49,9 +55,7 @@ public class GoodsApp {
 		
 		for(int i = 0; i < COUNT_GOODS; i++)
 		{
-			System.out.println(goods[i].getGoodsName() +"(가격:"
-					+ goods[i].getGoodsPrice() +"원)이 "
-					+ goods[i].getGoodsInputCount()+"개 입고 되었습니다.");
+			goods[i].printGoodsInfo();
 		}
 		// 자원정리
 		scanner.close();
