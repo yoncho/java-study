@@ -22,10 +22,14 @@ public class GoodsApp {
 		System.out.println(Goods.countOfGoods);
 		
 		camera.initGoodsInfo("nikon", 400000, 0, 0);
-		System.out.println("상품 이름 : " + camera.getName() +
-				"상품 가격 : " + camera.getPrice() +
-				"재고 : " + camera.getCountStock() +
-				"팔린 개수 : " + camera.getCountSold());
+
+		camera.showInfo();
+		camera.setPrice(500000);
+		int discountPrice = camera.calcDiscountPrice(0.5);
+		
+		System.out.println(discountPrice);
+		
+		
 		
 	}
 
