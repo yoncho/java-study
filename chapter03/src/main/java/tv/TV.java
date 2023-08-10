@@ -33,7 +33,14 @@ public class TV {
  	public void volume(boolean up) {
  		//current power check logic
  		if (power) {
- 			this.volume = valueChanger(MIN_VOLUME, MAX_VOLUME, this.volume, 1);
+ 			if (up)
+ 			{
+ 				this.volume = valueChanger(MIN_VOLUME, MAX_VOLUME, this.volume, 1);
+ 			}
+ 			else
+ 			{
+ 				this.volume = valueChanger(MIN_VOLUME, MAX_VOLUME, this.volume, -1);
+ 			}
  		}
  		else {
  			exceptionPowerOff();
@@ -52,7 +59,7 @@ public class TV {
  	
  	public void channel(int channel) {
  		if (power) {
- 			this.channel = valueChanger(MIN_VOLUME, MAX_VOLUME, this.channel, channel);
+ 			this.channel = valueChanger(MIN_CHANNEL, MAX_CHANNEL, this.channel, channel);
  		}
  		else {
  			exceptionPowerOff();
@@ -61,7 +68,14 @@ public class TV {
  	
  	public void channel(boolean up) {
  		if (power) {
- 			this.channel = valueChanger(MIN_VOLUME, MAX_VOLUME, this.channel, 1);
+ 			if (up)
+ 			{
+ 				this.channel = valueChanger(MIN_CHANNEL, MAX_CHANNEL, this.channel, 1);
+ 			}
+ 			else
+ 			{
+ 				this.channel = valueChanger(MIN_CHANNEL, MAX_CHANNEL, this.channel, -1);
+ 			}
  		}
  		else {
  			exceptionPowerOff();
@@ -75,20 +89,30 @@ public class TV {
  	
  	public int valueChanger(int min, int max, int currentValue, int upCount)
  	{
- 		int checkValue = currentValue + upCount;
  		int result;
  		
- 		if(checkValue > max) {
- 			result = min;
- 		}else if (checkValue < min)
+ 		if (upCount < min)
  		{
  			result = max;
  		}
- 		else
+ 		else if(upCount > max)
  		{
- 			result = checkValue;
+ 			result = min;
  		}
- 		
+ 		else {
+ 			int checkValue = currentValue + upCount;
+ 	 		
+ 	 		if(checkValue > max) {
+ 	 			result = min;
+ 	 		}else if (checkValue < min)
+ 	 		{
+ 	 			result = max;
+ 	 		}
+ 	 		else
+ 	 		{
+ 	 			result = checkValue;
+ 	 		}
+ 		}
  		return result;
  	}
  	
