@@ -33,7 +33,7 @@ public class TV {
  	public void volume(boolean up) {
  		//current power check logic
  		if (power) {
- 			this.volume = checkRange(MIN_VOLUME, MAX_VOLUME, this.volume, 1);
+ 			this.volume = valueChanger(MIN_VOLUME, MAX_VOLUME, this.volume, 1);
  		}
  		else {
  			exceptionPowerOff();
@@ -43,7 +43,7 @@ public class TV {
  	
  	public void volume(int volume) {
  		if (power) {
- 			this.volume = checkRange(MIN_VOLUME, MAX_VOLUME, this.volume, volume);
+ 			this.volume = valueChanger(MIN_VOLUME, MAX_VOLUME, this.volume, volume);
  		}
  		else {
  			exceptionPowerOff();
@@ -52,7 +52,7 @@ public class TV {
  	
  	public void channel(int channel) {
  		if (power) {
- 			this.channel = checkRange(MIN_VOLUME, MAX_VOLUME, this.channel, channel);
+ 			this.channel = valueChanger(MIN_VOLUME, MAX_VOLUME, this.channel, channel);
  		}
  		else {
  			exceptionPowerOff();
@@ -61,7 +61,7 @@ public class TV {
  	
  	public void channel(boolean up) {
  		if (power) {
- 			this.channel = checkRange(MIN_VOLUME, MAX_VOLUME, this.channel, 1);
+ 			this.channel = valueChanger(MIN_VOLUME, MAX_VOLUME, this.channel, 1);
  		}
  		else {
  			exceptionPowerOff();
@@ -73,7 +73,7 @@ public class TV {
  				", channel= " + getChannel() + ", volume= " + getVolume() + "]");
  	}
  	
- 	public int checkRange(int min, int max, int currentValue, int upCount)
+ 	public int valueChanger(int min, int max, int currentValue, int upCount)
  	{
  		int checkValue = currentValue + upCount;
  		int result;
