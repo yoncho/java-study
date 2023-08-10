@@ -1,8 +1,9 @@
 package paint;
 
-public class Rect {
+public class Rect extends Shape {
 	private int x1, y1, x2, y2, x3, y3, x4, y4;
 	
+	@Override
 	public void draw(){
 		System.out.println("사각형을 그렸습니다.");
 	}
