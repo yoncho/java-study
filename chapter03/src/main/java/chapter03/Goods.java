@@ -17,6 +17,14 @@ public class Goods {
 		
 	}
 	
+	public Goods(String name, int price, int countStock, int countSold)
+	{
+		this.name = name;
+		this.price = price;
+		this.countStock = countStock;
+		this.countSold = countSold;
+	}
+	
 	public Goods(int price)
 	{
 		//추가 생성자 - 추가생성자만 있을 경우 error/ 추가 생성자를 만들었을 경우, 사용자가 직접 기본 생성자를 추가해줘야함.
@@ -86,9 +94,9 @@ public class Goods {
 	public void showInfo()
 	{
 		System.out.println("상품 이름 : " + name +
-				"상품 가격 : " + price +
-				"재고 : " + countStock +
-				"팔린 개수 : " + countSold);
+				" ,상품 가격 : " + price +
+				" ,재고 : " + countStock +
+				" ,팔린 개수 : " + countSold);
 	}
 
 	public int calcDiscountPrice(double discountRate) {

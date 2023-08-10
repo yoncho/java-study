@@ -30,7 +30,7 @@ public class ArrayUtil {
 		
 		for(int i = 0 ; i < is.length + is2.length; i++)
 		{
-			
+			//
 		}
 		return null;
 	}

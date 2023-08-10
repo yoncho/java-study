@@ -30,7 +30,9 @@ public class GoodsApp {
 		System.out.println(discountPrice);
 		
 		
+		Goods tv = new Goods("삼성 스마트 43인치 TV", 800000, 10 , 20);
 		
+		tv.showInfo();
 	}
 
 }
