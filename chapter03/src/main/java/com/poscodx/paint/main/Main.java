@@ -7,7 +7,6 @@ import com.poscodx.paint.shape.Shape;
 import com.poscodx.paint.shape.Triangle;
 import com.poscodx.paint.text.GraphicText;
 
-import com.poscodx.paint.*;
 public class Main {
 
 	public static void main(String[] args) {
