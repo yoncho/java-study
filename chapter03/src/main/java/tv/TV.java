@@ -33,14 +33,8 @@ public class TV {
  	public void volume(boolean up) {
  		//current power check logic
  		if (power) {
- 			if (up)
- 			{
- 				this.volume = valueChanger(MIN_VOLUME, MAX_VOLUME, this.volume, 1);
- 			}
- 			else
- 			{
- 				this.volume = valueChanger(MIN_VOLUME, MAX_VOLUME, this.volume, -1);
- 			}
+ 			int upCount = up ? 1 : -1;
+ 			this.volume = valueChanger(MIN_VOLUME, MAX_VOLUME, this.volume, upCount);
  		}
  		else {
  			exceptionPowerOff();
@@ -50,7 +44,19 @@ public class TV {
  	
  	public void volume(int volume) {
  		if (power) {
- 			this.volume = valueChanger(MIN_VOLUME, MAX_VOLUME, this.volume, volume);
+ 			if (volume < MIN_VOLUME)
+ 	 		{
+ 				this.volume = MAX_VOLUME;
+ 	 		}
+ 	 		else if(volume > MAX_VOLUME)
+ 	 		{
+ 	 			this.volume = MIN_VOLUME;
+ 	 		}
+ 	 		else
+ 	 		{
+ 	 			this.volume = valueChanger(MIN_VOLUME, MAX_VOLUME, this.volume, volume);
+ 	 		}
+ 			
  		}
  		else {
  			exceptionPowerOff();
@@ -59,7 +65,18 @@ public class TV {
  	
  	public void channel(int channel) {
  		if (power) {
- 			this.channel = valueChanger(MIN_CHANNEL, MAX_CHANNEL, this.channel, channel);
+ 			if (channel < MIN_CHANNEL)
+ 	 		{
+ 				this.channel = MAX_CHANNEL;
+ 	 		}
+ 	 		else if(channel > MAX_CHANNEL)
+ 	 		{
+ 	 			this.channel = MIN_CHANNEL;
+ 	 		}
+ 	 		else
+ 	 		{
+ 	 			this.channel = valueChanger(MIN_CHANNEL, MAX_CHANNEL, this.channel, channel);
+ 	 		}
  		}
  		else {
  			exceptionPowerOff();
@@ -68,14 +85,8 @@ public class TV {
  	
  	public void channel(boolean up) {
  		if (power) {
- 			if (up)
- 			{
- 				this.channel = valueChanger(MIN_CHANNEL, MAX_CHANNEL, this.channel, 1);
- 			}
- 			else
- 			{
- 				this.channel = valueChanger(MIN_CHANNEL, MAX_CHANNEL, this.channel, -1);
- 			}
+ 			int upCount = up ? 1 : -1;
+ 			this.channel = valueChanger(MIN_CHANNEL, MAX_CHANNEL, this.channel, upCount);
  		}
  		else {
  			exceptionPowerOff();
@@ -90,29 +101,18 @@ public class TV {
  	public int valueChanger(int min, int max, int currentValue, int upCount)
  	{
  		int result;
- 		
- 		if (upCount < min)
- 		{
- 			result = max;
- 		}
- 		else if(upCount > max)
- 		{
- 			result = min;
- 		}
- 		else {
- 			int checkValue = currentValue + upCount;
- 	 		
- 	 		if(checkValue > max) {
- 	 			result = min;
- 	 		}else if (checkValue < min)
- 	 		{
- 	 			result = max;
- 	 		}
- 	 		else
- 	 		{
- 	 			result = checkValue;
- 	 		}
- 		}
+ 		int checkValue = currentValue + upCount;
+	 		
+	 	if(checkValue > max) {
+	 		result = min;
+	 	}else if (checkValue < min)
+	 	{
+	 		result = max;
+	 	}
+	 	else
+	 	{
+	 		result = checkValue;
+	 	}
  		return result;
  	}
  	
