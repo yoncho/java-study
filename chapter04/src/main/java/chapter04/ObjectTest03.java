@@ -23,7 +23,7 @@ public class ObjectTest03 {
 		System.out.println(s3 == s4); //동일성 reference 비교는 다른 객체이므로 false
 		System.out.println(s3.equals(s4)); //동질성 value가 동일한지..
 		System.out.println(s3.hashCode() + " : " + s4.hashCode());
-		
+		                                                                                                     
 		//주소 기반의 hash값
 		System.out.println(System.identityHashCode(s3) + " : " + System.identityHashCode(s4));
 		
