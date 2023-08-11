@@ -10,8 +10,7 @@ public class Point{
 		
 	}
 	
-	
-	
+	//성능때문에...
 	@Override
 	public int hashCode() {
 		return Objects.hash(x, y);
