@@ -17,7 +17,7 @@ public class MyStack{
 		currentTop++;
 		if(currentTop >= str.length)
 		{
-			str = bufferSizeUp(str);
+			str = bufferSetSize(str);
 		}
 	}
 	
@@ -42,7 +42,7 @@ public class MyStack{
 		return false;
 	}
 	
-	public String[] bufferSizeUp(String[] data)
+	public String[] bufferSetSize(String[] data)
 	{
 		String[] s = new String[data.length * 2];
 		
