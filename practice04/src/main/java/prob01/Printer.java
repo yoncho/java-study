@@ -30,7 +30,11 @@ public class Printer {
 		return s;
 	}
 	
-//	public void printlns(Object o) {
+//	public <T> void printlns(T o) {
 //		System.out.println(o);
 //	}
+	
+	public void printlns(Object o) {
+		System.out.println(o);
+	}
 }
