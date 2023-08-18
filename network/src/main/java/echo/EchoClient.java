@@ -73,6 +73,6 @@ public class EchoClient {
 		}	
 	}
 	private static void log(String message) {
-		System.out.println("[EchoClient] " + message);
+		System.out.println(message);
 	}
 }

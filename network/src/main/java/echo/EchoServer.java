@@ -9,27 +9,26 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.Scanner;
 
 public class EchoServer {
 	public static final int PORT = 8000;
 	public static void main(String[] args) {
-		
 		ServerSocket serverSocket = null;
 		try {
 			serverSocket = new ServerSocket();
-			serverSocket.bind(new InetSocketAddress("0.0.0.0", PORT), 10);
+			serverSocket.bind(new InetSocketAddress("0.0.0.0", PORT), 10); // 10은 요청큐 
+			// option 10은 accept하고 read할때까지 시간이 걸리는데. 그 사이 또 요청이 들어올 수 있는데. 그 요청을 queue에 넣어놓고 accept되고나서 queue에 쌓인
+			// 요청들을 선행으로 수행한다..!! backLog (accept하고 connect까지 시간동안 들어오는 요청을 잠시 저장해두는 곳)
 			log("starts...[port:"+PORT+"]");
 			Socket socket = serverSocket.accept(); 
 			
 			try {
-				InetSocketAddress remoteInetSocketAddress = (InetSocketAddress) socket.getRemoteSocketAddress();
+			InetSocketAddress remoteInetSocketAddress = (InetSocketAddress) socket.getRemoteSocketAddress();
 				String remoteHostAddress = remoteInetSocketAddress.getAddress().getHostAddress();
 				int remoteHostPort = remoteInetSocketAddress.getPort(); 
 				
 				log("connected by client [" + remoteHostAddress +
 						":" + remoteHostPort + "]");
-
 				//중요함...!! stream 사용방법!!
 				PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf-8"), true); // true - autoflush / file io는 false로 해야함.
 				BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
