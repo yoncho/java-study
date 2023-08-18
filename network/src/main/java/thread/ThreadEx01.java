@@ -7,7 +7,7 @@ public class ThreadEx01 {
 //			System.out.print(i);
 //		}
 		new DigitalThread().start();
-		
+
 		for (char c = 'a'; c <= 'z' ; c++) {
 			System.out.print(c);
 			try {
