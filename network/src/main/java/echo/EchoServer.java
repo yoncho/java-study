@@ -11,7 +11,7 @@ import java.net.Socket;
 import java.net.SocketException;
 
 public class EchoServer {
-	private static final int PORT = 8000;
+	public static final int PORT = 8000;
 	public static void main(String[] args) {
 		
 		ServerSocket serverSocket = null;
@@ -29,6 +29,7 @@ public class EchoServer {
 				log("connected by client [" + remoteHostAddress +
 						":" + remoteHostPort + "]");
 
+				//중요함...!! stream 사용방법!!
 				PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf-8"), true); // true - autoflush / file io는 false로 해야함.
 				BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
 				
