@@ -20,47 +20,54 @@ public class EchoServer {
 			// option 10은 accept하고 read할때까지 시간이 걸리는데. 그 사이 또 요청이 들어올 수 있는데. 그 요청을 queue에 넣어놓고 accept되고나서 queue에 쌓인
 			// 요청들을 선행으로 수행한다..!! backLog (accept하고 connect까지 시간동안 들어오는 요청을 잠시 저장해두는 곳)
 			log("starts...[port:"+PORT+"]");
-			Socket socket = serverSocket.accept(); 
 			
-			try {
-			InetSocketAddress remoteInetSocketAddress = (InetSocketAddress) socket.getRemoteSocketAddress();
-				String remoteHostAddress = remoteInetSocketAddress.getAddress().getHostAddress();
-				int remoteHostPort = remoteInetSocketAddress.getPort(); 
+			//1개의 thread
+			while(true) {
+				Socket socket = serverSocket.accept(); 
 				
-				log("connected by client [" + remoteHostAddress +
-						":" + remoteHostPort + "]");
-				//중요함...!! stream 사용방법!!
-				PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf-8"), true); // true - autoflush / file io는 false로 해야함.
-				BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
-				
-				while(true)
-				{
-					String data = br.readLine();
-					
-					if(data == null) {
-						log("closed by client");
-						break;
-					}
-					
-					log("received : " + data);
-					pw.println(data);
-				}
-				
-			}catch(SocketException e) {
-				log("suddenly closed by client");
-			}catch(IOException e) {
-				log("Socket Error: " + e);
-			}
-			finally {
 				try {
-					if(socket != null && !socket.isClosed()) {
-						socket.close();
+					InetSocketAddress remoteInetSocketAddress = (InetSocketAddress) socket.getRemoteSocketAddress();
+						String remoteHostAddress = remoteInetSocketAddress.getAddress().getHostAddress();
+						int remoteHostPort = remoteInetSocketAddress.getPort(); 
+						
+						log("connected by client [" + remoteHostAddress +
+								":" + remoteHostPort + "]");
+						//중요함...!! stream 사용방법!!
+						PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf-8"), true); // true - autoflush / file io는 false로 해야함.
+						BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
+						
+						while(true)
+						{
+							String data = br.readLine();
+							
+							if(data == null) {
+								log("closed by client");
+								break;
+							}
+							
+							log("received : " + data);
+							pw.println(data);
+						}
+						
+					}catch(SocketException e) {
+						log("suddenly closed by client");
+					}catch(IOException e) {
+						log("Socket Error: " + e);
 					}
-				
-				}catch(IOException e) {
-					e.printStackTrace();
-				}
+					finally {
+						try {
+							if(socket != null && !socket.isClosed()) {
+								socket.close();
+							}
+						
+						}catch(IOException e) {
+							e.printStackTrace();
+						}
+					}
 			}
+			
+			
+			
 		} catch (IOException e) {
 			log("Server Socket Error: " + e);
 		} finally {
