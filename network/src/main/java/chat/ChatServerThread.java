@@ -70,17 +70,17 @@ public class ChatServerThread extends Thread {
 						pw.println("ADD:FAIL");
 						break;
 					}
-					processClient(addTokens[0], pw);
+					doJoin(addTokens[0], pw);
 				}else if("MSG".equals(tokens[0])) {
 					//Client의 입력이 Enter인 경우 빈 개행 출력 
 					message = tokens.length == 1 ? "" : tokens[1];
 					
-					processMessage(message);
+					doMessage(message);
 				}else if("EXT".equals(tokens[0])) {
-					processQuit(pw);
+					doQuit(pw);
 					break;
 				}else if ("MEMS".equals(tokens[0])) {
-					printClientList(); //현재 서버에 연결되어있는 Client목록 표시
+					notifyClienList(); //현재 서버에 연결되어있는 Client목록 표시
 				}else {
 					ChatServer.systemLog(ChatServer.SYSTEM, "ERROR : 정의되지 않은 명령어 입력 (" + tokens[0] +")");
 				}
@@ -102,17 +102,14 @@ public class ChatServerThread extends Thread {
 			} catch (IOException e) {
 				ChatServer.systemLog("Exception", e.toString());
 			}
-			
 		}
 	}
-	
-	
+
 	private boolean checkPassWord(String password) {
 		return ChatServer.PASSWORD.equals(password) ? true:false;
 	}
 
-
-	public void processClient(String nickName,PrintWriter pw) {
+	public void doJoin(String nickName,PrintWriter pw) {
 		this.client = new ClientInfo(nickName, Thread.currentThread().getId(),pw);
 		addClient(client);
 		String ack = "ADD:OK";
@@ -124,12 +121,12 @@ public class ChatServerThread extends Thread {
 		pw.println(ack);
 	}
 	
-	private void processMessage(String message) {
+	private void doMessage(String message) {
 		String broadCaseMessage = "MSG:("+ this.client.getNickName() + ") " + message;
 		broadCast(broadCaseMessage, false);
 	}
 
-	private void processQuit(PrintWriter pw) {
+	private void doQuit(PrintWriter pw) {
 		String data = "MSG:" + this.client.getNickName() + "님이 퇴장 하였습니다.";
 		removeClient(this.client);
 		broadCast(data, true);
@@ -160,7 +157,7 @@ public class ChatServerThread extends Thread {
 		}
 	}
 	
-	public void printClientList() {
+	public void notifyClienList() {
 		broadCast("SYSTEM:현재 채팅방 사용자 목록 ==========", false);
 		for(ClientInfo user : clientInfoList) {
 			broadCast("SYSTEM:" + user.getNickName(), false);
