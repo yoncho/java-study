@@ -17,6 +17,10 @@ public class RequestHandler extends Thread {
 	@Override
 	public void run() {
 		try {
+			// logging Remote Host IP Address & Port
+			InetSocketAddress inetSocketAddress = ( InetSocketAddress )socket.getRemoteSocketAddress();
+			log( "connected from " + inetSocketAddress.getAddress().getHostAddress() + ":" + inetSocketAddress.getPort() );
+			
 			// get IOStream
 			OutputStream outputStream = socket.getOutputStream();
 			BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));			
@@ -42,13 +46,27 @@ public class RequestHandler extends Thread {
 					break;
 				}
 				
-				log(line);
+//				log(line);
 			}
 			log(request);
-
-			// logging Remote Host IP Address & Port
-			InetSocketAddress inetSocketAddress = ( InetSocketAddress )socket.getRemoteSocketAddress();
-			log( "connected from " + inetSocketAddress.getAddress().getHostAddress() + ":" + inetSocketAddress.getPort() );
+			
+			//restful [GET/POST/PUT/DELETE] (CRUD같은,,, 느낌
+			//		  read : /user 를 하면 user 정보를 줘! (/user/PKI : PKI에 해당하는 user 정보 줘)
+			//			  create : /user 를 하면 user 정보를 추가해!! 
+			// 					update : /user/10 을 하면 user 10번에 내용을 업데이트해라
+			//						delete : /user/10 을 하면 user 10번을 제거해라
+			
+			String[] tokens = request.split(" ");
+			if("GET".equals(tokens[0])) {
+				responseStaticResource(outputStream, tokens[1], tokens[2]);
+			}else {
+				// POST, PUT, DELETE가 온 경우. 현재 GET만 구현했기 때문에 400 return
+				// 이외에 HEAD, CONNECT가 있음..!!
+				// SimpleHttpServer 에서 무시 (400 bas request)
+//				responseStatic400Error(outputStream, tokens[2]); //400 BAD REQUEST
+				
+			}
+			
 			
 			// 예제 응답입니다.
 			// 서버 시작과 테스트를 마친 후, 주석 처리 합니다.
@@ -71,6 +89,12 @@ public class RequestHandler extends Thread {
 				log( "error:" + ex );
 			}
 		}			
+	}
+
+	private void responseStaticResource(OutputStream outputStream, String url, String protocol) {
+		
+		
+		
 	}
 
 	public void log( String message ) {
