@@ -27,16 +27,13 @@ public class ChatClientThread extends Thread{
 				}
 				
 				String[] tokens = line.split(":");
-				if("ADD:OK".equals(line)){
-					System.out.println("채팅방에 입장했습니다 : )");
-				}else if("ADD:FAIL".equals(line)) {
-					System.out.println("채팅방 입장에 실패했습니다. :(");
-					break;
-				}else if("MSG".equals(tokens[0])) {
+				if("MSG".equals(tokens[0])) {
 					String message = tokens.length == 1 ? "":tokens[1];
 					System.out.println(message);
 				}else if("SYSTEM".equals(tokens[0])) {
 					System.out.println("SYSTEM:" + tokens[1]);
+				}else {
+					System.out.println("SYSTEM: 정의되지 않은 명령어 입니다. (" + line+")");
 				}
 			}
 		} catch (UnsupportedEncodingException e) {
