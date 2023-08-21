@@ -67,7 +67,7 @@ public class ChatServerThread extends Thread {
 					
 					if(!checkPassWord(addTokens[1])) {
 						//Password wrong!!
-						ChatServer.systemLog(ChatServer.SYSTEM,"비밀번호가 틀렸습니다.");
+						pw.println("ADD:FAIL");
 						break;
 					}
 					processClient(addTokens[0], pw);
@@ -80,9 +80,8 @@ public class ChatServerThread extends Thread {
 					processQuit(pw);
 					break;
 				}else if ("MEMS".equals(tokens[0])) {
-					printClientList();
-				}
-				else {
+					printClientList(); //현재 서버에 연결되어있는 Client목록 표시
+				}else {
 					ChatServer.systemLog(ChatServer.SYSTEM, "ERROR : 정의되지 않은 명령어 입력 (" + tokens[0] +")");
 				}
 			}

@@ -64,8 +64,7 @@ public class ChatClient extends ChatUtil{
 					break;
 				}else if ("mems".equals(input)){
 					pw.println(COMMAND_MEMS);
-				}
-				else {
+				}else {
 					//9. 메시지 처리
 					pw.println(COMMAND_MSG+input);
 				}
