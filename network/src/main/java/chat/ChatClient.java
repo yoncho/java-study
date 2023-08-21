@@ -44,7 +44,7 @@ public class ChatClient extends ChatUtil{
 				systemLog("SYSTEM","이름 입력 포맷이 잘못 되었습니다. (공백이 포함되어있습니다.)");
 				return;
 			}
-			systemLog("SYSTEM","채팅방 비밀번호>>");
+			systemLog("SYSTEM","채팅방 비밀번호 (*비밀번호는 1234 입니다. 강사님!)>>");
 			String password = scanner.nextLine();
 			
 			pw.println(COMMAND_ADD+nickName+"@"+password);
