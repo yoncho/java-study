@@ -28,7 +28,7 @@ public class ChatClientThread extends Thread{
 				
 				String[] tokens = line.split(":");
 				if("MSG".equals(tokens[0])) {
-					String message = tokens.length == 1 ? "":tokens[1];
+					String message = tokens[1];
 					System.out.println(message);
 				}else if("SYSTEM".equals(tokens[0])) {
 					System.out.println("SYSTEM:" + tokens[1]);

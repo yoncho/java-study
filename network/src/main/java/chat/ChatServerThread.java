@@ -72,9 +72,7 @@ public class ChatServerThread extends Thread {
 					}
 					doJoin(addTokens[0], pw);
 				}else if("MSG".equals(tokens[0])) {
-					//Client의 입력이 Enter인 경우 빈 개행 출력 
-					message = tokens.length == 1 ? "" : tokens[1];
-					
+					message = tokens[1];
 					doMessage(message);
 				}else if("EXT".equals(tokens[0])) {
 					doQuit(pw);
