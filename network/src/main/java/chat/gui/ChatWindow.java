@@ -12,22 +12,30 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Scanner;
 
 public class ChatWindow {
-
+	private Socket socket = null;
+	private BufferedReader br = null;
+	private PrintWriter pw = null;
 	private Frame frame;
 	private Panel pannel;
 	private Button buttonSend;
 	private TextField textField;
 	private TextArea textArea;
-
 	//socket 받아와 작업해야함!!
-	public ChatWindow(String name) {
+	public ChatWindow(String name, BufferedReader br, PrintWriter pw) {
 		frame = new Frame(name);
 		pannel = new Panel();
 		buttonSend = new Button("Send");
 		textField = new TextField();
 		textArea = new TextArea(30, 80);
+		this.br = br;
+		this.pw = pw;
 	}
 
 	//window show!
@@ -73,12 +81,11 @@ public class ChatWindow {
 		// TextArea
 		textArea.setEditable(false);
 		frame.add(BorderLayout.CENTER, textArea);
-
+		
 		// Frame
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				finish();
-				
 			}
 		});
 		frame.setVisible(true);
@@ -86,25 +93,37 @@ public class ChatWindow {
 		
 		// IOStream 받아오기
 		// ChatClientThread 생성 및 실행
+		new ChatClientThread().start();
 	}
 	
 	private void finish() {
 		//quit 프로토콜 구현
-		
+		pw.println(ChatClientApp.COMMAND_QUIT);
+		try {
+			if(br != null) {
+				br.close();
+			}
+			if(pw != null) {
+				pw.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		//exit java(jvm)
 		System.exit(0); // jvm 종료.. 0(정상종료)/1(비정상종료)
 	}
 	
 	private void sendMessage() {
 		String message = textField.getText();
-		
-		System.out.println("Messaeg Send Protocol :" + message);
-		
-		textField.setText("");
-		textField.requestFocus(); //마우스 포커스 가저오기
-		
-		//ChatClientThread 에서 서버로 부터 받은 메세지가 있다고 가정하고..
-		updateTextArea("마이콜 : " + message);
+		System.out.println("system log :" + message);
+		if(ChatClientApp.COMMAND_QUIT.equals(message)) {
+			finish();
+		}else {
+			pw.println(ChatClientApp.COMMAND_MSG + ":" + message);
+			textField.setText("");
+			textField.requestFocus(); //마우스 포커스 가저오기
+		}
 	}
 	
 	private void updateTextArea(String message) {
@@ -116,9 +135,29 @@ public class ChatWindow {
 
 		@Override
 		public void run() {
-			updateTextArea("마이콜: 안녕");//받은 데이터
-			
+			try {
+				while(true) {
+					String line = br.readLine();
+					
+					if(line == null) {
+						break;
+					}
+					
+					String[] tokens = line.split(":");
+					if((ChatClientApp.COMMAND_MSG).equals(tokens[0])) {
+						updateTextArea(tokens[1]);
+					}else if((ChatClientApp.COMMAND_SYSTEM).equals(tokens[0])){
+						updateTextArea(tokens[1]);
+					}else if((ChatClientApp.COMMAND_QUIT).equals(tokens[0])){
+						break;
+					}else {
+						System.out.println("정의되지 않은 명령어 입니다.");
+					}
+				}
+				updateTextArea("안녕");//받은 데이터
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
-		
 	}
 }
