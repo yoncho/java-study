@@ -48,8 +48,7 @@ public class ChatClient extends ChatUtil{
 			String password = scanner.nextLine();
 			
 			pw.println(COMMAND_ADD+nickName+"@"+password);
-			String data = br.readLine();
-			if ("ADD:FAIL".equals(data)) {
+			if ("ADD:FAIL".equals(br.readLine())) {
 				systemLog("SYSTEM","채팅방 비밀번호가 틀렸습니다.");
 				return;
 			}else
@@ -79,7 +78,7 @@ public class ChatClient extends ChatUtil{
 			
 		}catch(Exception e) {
 			systemLog("Exception",e.toString());
-			pw.println("EXT");
+			pw.println(COMMAND_EXT);
 		}finally {
 			if(readThread != null) {
 				readThread.interrupt();
