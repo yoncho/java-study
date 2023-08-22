@@ -63,7 +63,9 @@ public class ChatClient extends ChatUtil{
 			while(true) {
 				System.out.print(">>");
 				String input = scanner.nextLine();
-				
+				if(input.isEmpty()) {
+					continue;
+				}
 				if("quit".equals(input)) {
 					//8. quit 프로토콜 처리
 					pw.println(COMMAND_EXT);
