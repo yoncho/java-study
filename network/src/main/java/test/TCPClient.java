@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 public class TCPClient {
 	private static final String SERVER_IP = "127.0.0.01";
@@ -16,6 +17,24 @@ public class TCPClient {
 		try {
 			//1. Socket Create
 			socket = new Socket();
+			
+			// 1-1. socket buffer size
+			int sndBufferSize = socket.getSendBufferSize();
+			int rcvBufferSize = socket.getReceiveBufferSize();
+			System.out.println(sndBufferSize + " : "+ rcvBufferSize);
+			
+			// 1-2. set buffer size
+			socket.setReceiveBufferSize(1024 * 10);
+			socket.setSendBufferSize(1024 * 10); //10k
+			sndBufferSize = socket.getSendBufferSize();
+			rcvBufferSize = socket.getReceiveBufferSize();
+			System.out.println(sndBufferSize + " : "+ rcvBufferSize);
+			
+			// 1-3. NO-DELAY (Nagle Algorithm) on/off
+			socket.setTcpNoDelay(true); //ack를 받지 않고 send를 막!! 하겠다
+			
+			// 1-4. SO-TIMEOUT (Socket read timeout)
+			socket.setSoTimeout(3000);
 			
 			//2. Server Connect
 			socket.connect(new InetSocketAddress(SERVER_IP, SERVER_PORT));
@@ -45,7 +64,9 @@ public class TCPClient {
 			
 		}catch (SocketException e) {
 			System.out.println("[client] suddenly close by server");
-		} catch (IOException e) {
+		}catch (SocketTimeoutException e) {
+			System.out.println("[client] timeout!!!");
+		}catch (IOException e) {
 			System.out.println("[client] error : " + e);
 		}finally {
 			try {
