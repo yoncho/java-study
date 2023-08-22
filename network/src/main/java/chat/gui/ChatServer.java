@@ -10,9 +10,10 @@ import java.util.List;
 public class ChatServer extends ChatUtil{
 	//final area
 	private static final String IP_ADRESS = "0.0.0.0";
-	private static final int PORT = 5555;
+	private static final int PORT = 5556;
 	public static final String SYSTEM = "SERVER";
 	public static final String PASSWORD = "1234";
+
 	
 	//share resource area
 	public static final String COMMAND_ADD = "ADD";
@@ -20,7 +21,11 @@ public class ChatServer extends ChatUtil{
 	public static final String COMMAND_ADD_FAIL = "ADD:FAIL";
 	public static final String COMMAND_MSG = "MSG";
 	public static final String COMMAND_SYSTEM = "SYSTEM";
-	public static final String COMMAND_QUIT = "quit";
+	public static final String SYSTEM_COMMAND_QUIT = "/QUIT";
+	public static final String SYSTEM_COMMAND_MEMS = "/MEMS";
+	public static final String SYSTEM_COMMAND_WHISPER = "/WHISPER"; //귓속말
+	public static final String SYSTEM_COMMAND_WHISPER_OK = "WHISPER_OK"; 
+	public static final String SYSTEM_COMMAND_WHISPER_FAIL = "WHISPER_FAIL";
 	public static List<ClientInfo> clientInfoList;
 	
 	public static void main(String[] args) {

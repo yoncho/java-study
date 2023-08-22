@@ -16,6 +16,8 @@ public class ChatServerThread extends Thread {
 	private List<ClientInfo> clientInfoList;
 	private ClientInfo client;
 	private boolean isRunnable = true;
+	private final String ALL_USER = "/ALL";
+	
 	public ChatServerThread(Socket socket, List<ClientInfo> clientInfoList) {
 		this.socket = socket;
 		this.clientInfoList = clientInfoList;
@@ -71,12 +73,17 @@ public class ChatServerThread extends Thread {
 					doJoin(addTokens[0], pw);
 				}else if(ChatServer.COMMAND_MSG.equals(tokens[0])) {
 					message = tokens[1];
-					doMessage(message);
-				}else if(ChatServer.COMMAND_QUIT.equals(tokens[0])) {
+					doMessage(ALL_USER, message);
+				}else if(ChatServer.SYSTEM_COMMAND_WHISPER.equals(tokens[0])) {
+					String[] whipserData = tokens[1].split("/");
+					doMessage(whipserData[0], "(귓속말) " +whipserData[1]);
+					String ack = ChatServer.SYSTEM_COMMAND_WHISPER_OK + ":("+ whipserData[0]+"=>"+whipserData[1]+")"; 
+					this.client.getPrintWriter().println(ack);
+				}else if(ChatServer.SYSTEM_COMMAND_QUIT.equals(tokens[0])) {
 					doQuit(pw);
 					break;
-				}else if ("MEMS".equals(tokens[0])) {
-					notifyClienList(); //현재 서버에 연결되어있는 Client목록 표시
+				}else if (ChatServer.SYSTEM_COMMAND_MEMS.equals(tokens[0])) {
+					systemNotifyClienList(); //현재 서버에 연결되어있는 Client목록 표시
 				}else {
 					ChatServer.systemLog(ChatServer.SYSTEM, "ERROR : 정의되지 않은 명령어 입력 (" + tokens[0] +")");
 				}
@@ -108,27 +115,25 @@ public class ChatServerThread extends Thread {
 		return ChatServer.PASSWORD.equals(password) ? true:false;
 	}
 
-	public void doJoin(String nickName,PrintWriter pw) {
+	private void doJoin(String nickName,PrintWriter pw) {
 		this.client = new ClientInfo(nickName, Thread.currentThread().getId(),pw);
+		String data = "MSG:" + client.getNickName() + "님이 입장했습니다.";
+		broadCast(ALL_USER,data);
 		addClient(client);
 		String ack = "ADD:OK";
-		
-		String data = "MSG:" + client.getNickName() + "님이 입장했습니다.";
-		broadCast(data, true);
-		
 		//ACK
 		pw.println(ack);
 	}
 	
-	private void doMessage(String message) {
-		String broadCaseMessage = "MSG:("+ this.client.getNickName() + ") " + message;
-		broadCast(broadCaseMessage, false);
+	private void doMessage(String target, String message) {
+		String broadCaseMessage = "MSG:["+ this.client.getNickName() + "] " + message;
+		broadCast(target, broadCaseMessage);
 	}
 
 	private void doQuit(PrintWriter pw) {
 		String data = "MSG:" + this.client.getNickName() + "님이 퇴장 하였습니다.";
 		removeClient(this.client);
-		broadCast(data, true);
+		broadCast(ALL_USER, data);
 		if(clientInfoList.isEmpty())
 		{
 			System.out.println("채팅방에 아무도 없습니다.");
@@ -149,23 +154,22 @@ public class ChatServerThread extends Thread {
 	}
 	
 	//exceptSelf는 현재 스레드와 연결된 client를 제외하고 다른 client에게만 전송하는 옵션.
-	private void broadCast(String data, Boolean exceptSelf) {
+	private void broadCast(String target, String data) {
 		synchronized (clientInfoList) {
 			for(ClientInfo client : clientInfoList) {
-				if((this.client).equals(client) && exceptSelf)
+				if(target == ALL_USER || (target != ALL_USER && client.getNickName().equals(target)))
 				{
-					continue;
+					client.getPrintWriter().println(data);
 				}
-				client.getPrintWriter().println(data);
 			}
 		}
 	}
 	
-	public void notifyClienList() {
-		broadCast("SYSTEM:현재 채팅방 사용자 목록 ==========", false);
-		for(ClientInfo user : clientInfoList) {
-			broadCast("SYSTEM:" + user.getNickName(), false);
+	public void systemNotifyClienList() {
+		broadCast(ALL_USER, "SYSTEM:=====현재 채팅방 사용자 목록 =====");
+		for(ClientInfo client : clientInfoList) {
+			broadCast(ALL_USER, "SYSTEM:" + client.getNickName());
 		}
-		broadCast("SYSTEM:===========================", false);
+		broadCast(ALL_USER, "SYSTEM:===========================");
 	}
 }

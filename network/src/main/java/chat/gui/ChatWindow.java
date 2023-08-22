@@ -19,7 +19,6 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class ChatWindow {
-	private Socket socket = null;
 	private BufferedReader br = null;
 	private PrintWriter pw = null;
 	private Frame frame;
@@ -50,15 +49,14 @@ public class ChatWindow {
 				//sendMessage();
 				sendMessage();
 			}
-			
 		});
-		//위와 아래가 같음.. 추정하는것!추론하는것!
-		buttonSend.addActionListener((ActionEvent e)->{
-			
-		});
+//		//위와 아래가 같음.. 추정하는것!추론하는것!
+//		buttonSend.addActionListener((ActionEvent e)->{
+//			
+//		});
 
 		// Textfield
-		textField.setColumns(80);
+		textField.setColumns(40);
 		textField.addKeyListener(new KeyAdapter() {
 
 			@Override
@@ -89,7 +87,8 @@ public class ChatWindow {
 			}
 		});
 		frame.setVisible(true);
-		frame.pack();
+//		frame.pack();
+		frame.setSize(500,500);
 		
 		// IOStream 받아오기
 		// ChatClientThread 생성 및 실행
@@ -98,7 +97,7 @@ public class ChatWindow {
 	
 	private void finish() {
 		//quit 프로토콜 구현
-		pw.println(ChatClientApp.COMMAND_QUIT);
+		pw.println(ChatClientApp.SYSTEM_COMMAND_QUIT);
 		try {
 			if(br != null) {
 				br.close();
@@ -116,14 +115,28 @@ public class ChatWindow {
 	
 	private void sendMessage() {
 		String message = textField.getText();
-		System.out.println("system log :" + message);
-		if(ChatClientApp.COMMAND_QUIT.equals(message)) {
-			finish();
-		}else {
-			pw.println(ChatClientApp.COMMAND_MSG + ":" + message);
-			textField.setText("");
-			textField.requestFocus(); //마우스 포커스 가저오기
+		if (message.isEmpty()) {
+			return;
 		}
+		
+		System.out.println("system log :" + message);
+		
+		if(ChatClientApp.SYSTEM_COMMAND_QUIT.equals(message)) {
+			finish();
+		}else if(message.charAt(0) == '/' && message.contains(ChatClientApp.SYSTEM_COMMAND_WHISPER)){
+			String[] tokens = message.split(" ");
+			if (tokens.length < 3) {
+				updateTextArea("*귓속말 기능은 /WHISPER TARGET MESSAGE 형태여야합니다.");//받은 데이터
+				return;
+			}
+			pw.println(ChatClientApp.SYSTEM_COMMAND_WHISPER + ":" + tokens[1] + "/" +tokens[2]);
+		}else if(ChatClientApp.SYSTEM_COMMAND_MEMS.equals(message)){
+			pw.println(ChatClientApp.SYSTEM_COMMAND_MEMS);
+		}else {//Message
+			pw.println(ChatClientApp.COMMAND_MSG + ":" + message);
+		}
+		textField.setText("");
+		textField.requestFocus(); //마우스 포커스 가저오기
 	}
 	
 	private void updateTextArea(String message) {
@@ -148,13 +161,14 @@ public class ChatWindow {
 						updateTextArea(tokens[1]);
 					}else if((ChatClientApp.COMMAND_SYSTEM).equals(tokens[0])){
 						updateTextArea(tokens[1]);
-					}else if((ChatClientApp.COMMAND_QUIT).equals(tokens[0])){
+					}else if((ChatClientApp.SYSTEM_COMMAND_QUIT).equals(tokens[0])){
 						break;
+					}else if((ChatClientApp.SYSTEM_COMMAND_WHISPER_OK).equals(tokens[0])){
+						updateTextArea("(귓속말) " + tokens[1]);
 					}else {
 						System.out.println("정의되지 않은 명령어 입니다.");
 					}
 				}
-				updateTextArea("안녕");//받은 데이터
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
