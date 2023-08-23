@@ -8,14 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatServer extends ChatUtil{
-	//final area
+	//Info
 	private static final String IP_ADRESS = "0.0.0.0";
 	private static final int PORT = 5556;
 	public static final String SYSTEM = "SERVER";
 	public static final String PASSWORD = "1234";
 
-	
-	//share resource area
+	//Command
 	public static final String COMMAND_ADD = "ADD";
 	public static final String COMMAND_ADD_OK = "ADD:OK";
 	public static final String COMMAND_ADD_FAIL = "ADD:FAIL";

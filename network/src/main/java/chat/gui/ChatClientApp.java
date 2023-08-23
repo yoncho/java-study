@@ -9,9 +9,11 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class ChatClientApp {
+	//Info
 	private static final String SERVER_IP = "127.0.0.1";
 	private static final int PORT = 5556;
 	
+	//Command
 	public static final String COMMAND_ADD = "ADD";
 	public static final String COMMAND_ADD_OK = "ADD:OK";
 	public static final String COMMAND_ADD_FAIL = "ADD:FAIL";

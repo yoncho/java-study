@@ -56,9 +56,9 @@ public class ChatServerThread extends Thread {
 				 *  2) MSG = 메시지 전송
 				 *  ex) MSG:hello world!
 				 *  Option)
-				 *     (1) TO- = 상대 언급
-				 *    	MSG:TO-username/hello !
-				 *  3) EXT = 퇴장
+				 *     (1) /WHISPER user_name message
+				 *    	/WHISPER yoncho hello 하게되면 yoncho라는 client에게 hello메시지를 귓속말로 전송.
+				 *  3) QUIT = 퇴장
 				 *  4) MEMS = 현재 채팅방의 사용자 목록 표시
 				 * */
 				String[] tokens = request.split(":");
