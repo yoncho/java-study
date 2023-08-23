@@ -19,6 +19,4 @@ public class ChatClientThread extends Thread{
 	public void run() {
 		new ChatWindow(name, br, pw).show();
 	}
-	
-	
 }

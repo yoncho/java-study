@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class ChatClientApp extends ChatUtil {
 	//Info
 	private static final String SERVER_IP = "127.0.0.1";
-	private static final int PORT = 5556;
+	private static final int PORT = 5555;
 	
 	public static void main(String[] args) {
 		String name = null;
@@ -43,7 +43,7 @@ public class ChatClientApp extends ChatUtil {
 			br = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
 			pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(),"utf-8"),true);
 			
-			//3. ADD Protocol
+			//3. ADD SEND
 			pw.println(COMMAND_ADD + ":" + name + "@" + "1234");
 
 			//4. ADD ACK

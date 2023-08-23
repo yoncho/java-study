@@ -10,7 +10,7 @@ import java.util.List;
 public class ChatServer extends ChatUtil{
 	//Info
 	private static final String IP_ADRESS = "0.0.0.0";
-	private static final int PORT = 5556;
+	private static final int PORT = 5555;
 	public static final String SYSTEM = "SERVER";
 	public static final String PASSWORD = "1234";
 
@@ -25,6 +25,7 @@ public class ChatServer extends ChatUtil{
 			serverSocket = new ServerSocket();
 			serverSocket.bind(new InetSocketAddress(IP_ADRESS, PORT),backLog);
 			systemLog(SYSTEM, "Waiting for connect " + IP_ADRESS + ":" + PORT);
+			
 			//#clientInfoList Init
 			clientInfoList = new ArrayList<>();
 			
@@ -45,8 +46,5 @@ public class ChatServer extends ChatUtil{
 				systemLog("IOEception", e.toString());
 			}
 		}
-		
-		
 	}
-
 }

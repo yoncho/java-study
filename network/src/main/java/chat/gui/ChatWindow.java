@@ -171,6 +171,8 @@ public class ChatWindow {
 				}
 			}catch(Exception e) {
 				e.printStackTrace();
+			}finally {
+				this.interrupt();
 			}
 		}
 	}
