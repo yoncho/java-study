@@ -22,7 +22,6 @@ public class ChatServerThread extends Thread {
 		this.socket = socket;
 		this.clientInfoList = clientInfoList;
 	}
-	
 
 	@Override
 	public void run() {
@@ -58,8 +57,9 @@ public class ChatServerThread extends Thread {
 				 *  Option)
 				 *     (1) /WHISPER user_name message
 				 *    	/WHISPER yoncho hello 하게되면 yoncho라는 client에게 hello메시지를 귓속말로 전송.
-				 *  3) QUIT = 퇴장
-				 *  4) MEMS = 현재 채팅방의 사용자 목록 표시
+				 *  3) /QUIT = 퇴장
+				 *  4) /MEMS = 현재 채팅방의 사용자 목록 표시
+				 *  '/'가 붙은 명령어의 경우 SYSTEM_COMMAND로 분류. ChatUtil에 정의된 COMMAND 확인!
 				 * */
 				String[] tokens = request.split(":");
 				if ((ChatServer.COMMAND_ADD).equals(tokens[0])) {
