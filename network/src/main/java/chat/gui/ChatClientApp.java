@@ -49,7 +49,7 @@ public class ChatClientApp extends ChatUtil {
 			//4. ADD ACK
 			String ack = br.readLine();
 			if(COMMAND_ADD_OK.equals(ack)) {
-				new ChatClientThread(name, br, pw).start();
+				new ChatWindow(name, br, pw).show();
 			}
 		}catch(Exception e){
 			e.printStackTrace();
