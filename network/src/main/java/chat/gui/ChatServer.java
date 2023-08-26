@@ -10,7 +10,7 @@ import java.util.List;
 public class ChatServer extends ChatUtil{
 	//Info
 	private static final String IP_ADRESS = "0.0.0.0";
-	private static final int PORT = 5555;
+	private static final int PORT = 5556;
 	public static final String SYSTEM = "SERVER";
 	public static final String PASSWORD = "1234";
 

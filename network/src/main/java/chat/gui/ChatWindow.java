@@ -14,27 +14,29 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class ChatWindow {
 	private BufferedReader br = null;
 	private PrintWriter pw = null;
+	private Socket socket = null;
 	private Frame frame;
 	private Panel pannel;
 	private Button buttonSend;
 	private TextField textField;
 	private TextArea textArea;
-	//socket 받아와 작업해야함!!
-	public ChatWindow(String name, BufferedReader br, PrintWriter pw) {
+
+	public ChatWindow(String name, Socket socket) {
 		frame = new Frame(name);
 		pannel = new Panel();
 		buttonSend = new Button("Send");
 		textField = new TextField();
 		textArea = new TextArea(30, 80);
-		this.br = br;
-		this.pw = pw;
+		this.socket = socket;
 	}
 
 	//window show!
@@ -46,14 +48,9 @@ public class ChatWindow {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//sendMessage();
 				sendMessage();
 			}
 		});
-//		//위와 아래가 같음.. 추정하는것!추론하는것!
-//		buttonSend.addActionListener((ActionEvent e)->{
-//			
-//		});
 
 		// Textfield
 		textField.setColumns(40);
@@ -87,30 +84,41 @@ public class ChatWindow {
 			}
 		});
 		frame.setVisible(true);
-//		frame.pack();
 		frame.setSize(500,500);
-		
-		// IOStream 받아오기
-		// ChatClientThread 생성 및 실행
-		new ChatClientThread().start();
+		updateTextArea("채팅방에 입장하셨습니다.");
+		try {
+			// IOStream 받아오기
+			br = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
+			pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(),"utf-8"),true);
+			
+			// ChatClientThread 생성 및 실행
+			new ChatClientThread().start();
+		} catch (Exception e) {
+			finish();
+			e.printStackTrace();
+		}
 	}
 	
 	private void finish() {
 		//quit 프로토콜 구현
 		pw.println(ChatClientApp.SYSTEM_COMMAND_QUIT);
 		try {
+			if(socket != null && !socket.isClosed()) {
+				socket.close();
+			}
 			if(br != null) {
 				br.close();
 			}
 			if(pw != null) {
 				pw.close();
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		//exit java(jvm)
-		System.exit(0); // jvm 종료.. 0(정상종료)/1(비정상종료)
+		// jvm 종료.. 0(정상종료)/1(비정상종료)
+		System.exit(0); 
 	}
 	
 	private void sendMessage() {
@@ -130,7 +138,7 @@ public class ChatWindow {
 				return;
 			}
 			pw.println(ChatClientApp.SYSTEM_COMMAND_WHISPER + ":" + tokens[1] + "/" +tokens[2]);
-		}else if(ChatClientApp.SYSTEM_COMMAND_MEMS.equals(message)){
+		}else if(ChatClientApp.SYSTEM_COMMAND_MEMS.equals(message)){ 
 			pw.println(ChatClientApp.SYSTEM_COMMAND_MEMS);
 		}else {//Message
 			pw.println(ChatClientApp.COMMAND_MSG + ":" + message);
@@ -145,7 +153,6 @@ public class ChatWindow {
 	}
 	
 	private class ChatClientThread extends Thread{
-
 		@Override
 		public void run() {
 			try {
@@ -171,8 +178,6 @@ public class ChatWindow {
 				}
 			}catch(Exception e) {
 				e.printStackTrace();
-			}finally {
-				this.interrupt();
 			}
 		}
 	}

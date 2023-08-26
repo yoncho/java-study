@@ -9,9 +9,8 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class ChatClientApp extends ChatUtil {
-	//Info
 	private static final String SERVER_IP = "127.0.0.1";
-	private static final int PORT = 5555;
+	private static final int PORT = 5556;
 	
 	public static void main(String[] args) {
 		String name = null;
@@ -44,17 +43,23 @@ public class ChatClientApp extends ChatUtil {
 			pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(),"utf-8"),true);
 			
 			//3. ADD SEND
-			pw.println(COMMAND_ADD + ":" + name + "@" + "1234");
+			pw.println(COMMAND_ADD + ":" + name + "@" + "1234"); //TODO Password 입력받기, 현재는 하드코딩(1234)되어있음.
 
 			//4. ADD ACK
 			String ack = br.readLine();
 			if(COMMAND_ADD_OK.equals(ack)) {
-				new ChatWindow(name, br, pw).show();
+				new ChatWindow(name, socket).show();
+			}else {
+				systemLog(name, "pass word가 틀렸습니다.");
 			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally {
-			scanner.close();
+			try {
+				scanner.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

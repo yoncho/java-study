@@ -44,23 +44,6 @@ public class ChatServerThread extends Thread {
 					break;
 				}
 				
-				/* 4. Protocol
-				 * *본 작업에서 통신 프로토콜은 아래와 같다.
-				 * 모든 메시지는 '명령어:메시지' 구조로 한다.
-				 * 명령어 : 
-				 * 	1) ADD = 사용자 추가
-				 * 	ex) ADD:user-name
-				 *   return ADD:OK 
-				 *   return ADD:FAIL  
-				 *  2) MSG = 메시지 전송
-				 *  ex) MSG:hello world!
-				 *  Option)
-				 *     (1) /WHISPER user_name message
-				 *    	/WHISPER yoncho hello 하게되면 yoncho라는 client에게 hello메시지를 귓속말로 전송.
-				 *  3) /QUIT = 퇴장
-				 *  4) /MEMS = 현재 채팅방의 사용자 목록 표시
-				 *  '/'가 붙은 명령어의 경우 SYSTEM_COMMAND로 분류. ChatUtil에 정의된 COMMAND 확인!
-				 * */
 				String[] tokens = request.split(":");
 				if ((ChatServer.COMMAND_ADD).equals(tokens[0])) {
 					String[] addTokens = tokens[1].split("@");
@@ -123,20 +106,29 @@ public class ChatServerThread extends Thread {
 		String ack = "ADD:OK";
 		//ACK
 		pw.println(ack);
+		
+		//systemLog
+		ChatServer.systemLog(ChatServer.SYSTEM + "[doJoin]", data);
 	}
 	
 	private void doMessage(String target, String message) {
 		String broadCaseMessage = "MSG:["+ this.client.getNickName() + "] " + message;
 		broadCast(target, broadCaseMessage);
+		//systemLog
+		ChatServer.systemLog(ChatServer.SYSTEM + "[doMessage]",  "target : " + target + "/ message : " + message);
 	}
 
 	private void doQuit(PrintWriter pw) {
 		String data = "MSG:" + this.client.getNickName() + "님이 퇴장 하였습니다.";
 		removeClient(this.client);
 		broadCast(ALL_USER, data);
+		
+		//systemLog
+		ChatServer.systemLog(ChatServer.SYSTEM + "[doQuit]", data);
+		
 		if(clientInfoList.isEmpty())
 		{
-			System.out.println("채팅방에 아무도 없습니다.");
+			ChatServer.systemLog(ChatServer.SYSTEM + "[doQuit]", "채팅방에 아무도 없습니다.");
 			isRunnable = false;
 		}
 	}
@@ -145,12 +137,18 @@ public class ChatServerThread extends Thread {
 		synchronized(clientInfoList){
 			clientInfoList.remove(clientInfoList.indexOf(client));
 		}
+		
+		//systemLog
+		ChatServer.systemLog(ChatServer.SYSTEM + "[removeClient]", "remove : " + client.getNickName());
 	}
 	
 	public void addClient(ClientInfo client) {
 		synchronized (clientInfoList) {
 			clientInfoList.add(client);
 		}
+		
+		//systemLog
+		ChatServer.systemLog(ChatServer.SYSTEM + "[addClient]", "add : " + client.getNickName());
 	}
 	
 	//exceptSelf는 현재 스레드와 연결된 client를 제외하고 다른 client에게만 전송하는 옵션.
@@ -163,6 +161,8 @@ public class ChatServerThread extends Thread {
 				}
 			}
 		}
+		//systemLog
+		ChatServer.systemLog(ChatServer.SYSTEM + "[broadCast]", "broadcast messge : " + data);
 	}
 	
 	public void systemNotifyClienList() {
@@ -171,5 +171,8 @@ public class ChatServerThread extends Thread {
 			broadCast(ALL_USER, "SYSTEM:" + client.getNickName());
 		}
 		broadCast(ALL_USER, "SYSTEM:===========================");
+		
+		//systemLog
+		ChatServer.systemLog(ChatServer.SYSTEM + "[systemNotifyClienList]", " success ");
 	}
 }
